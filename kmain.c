@@ -1,4 +1,9 @@
-int sum_of_three(int arg1, int arg2, int arg3)
+#include "fb.h"
+
+void kmain()
 {
-	return arg1 + arg2 + arg3;
+	fb_clear();
+	FbContext ctx;
+	fb_init_context(&ctx);
+	fb_write_text("Hello from the little book about OS development\nThis is the framebuffer", &ctx);
 }
