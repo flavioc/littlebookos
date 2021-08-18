@@ -1,6 +1,6 @@
 OBJECTS = fb.o loader.o kmain.o
 CC = gcc
-CFLAGS = -O3 -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
+CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
 LDFLAGS = -T link.ld -melf_i386
 AS = nasm
@@ -24,8 +24,12 @@ os.iso: kernel.elf
 		-o os.iso \
 		iso
 
-run: os.iso
+bochs: os.iso
 	bochs -f bochsrc.txt -q
+
+qemu: os.iso
+	qemu-system-i386 -s -boot d -cdrom os.iso
+
 
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
