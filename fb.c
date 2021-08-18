@@ -1,4 +1,5 @@
 #include "fb.h"
+#include "io.h"
 
 static char* fb = (char*) 0x000B8000;
 
@@ -32,6 +33,7 @@ void fb_write_text(const char* str, FbContext* context) {
    for (int i = 0; *(str + i); ++i) {
       fb_write_char(*(str + i), context);
    }
+   fb_move_cursor(context->row, context->col);
 }
 
 void fb_clear() {
@@ -47,4 +49,29 @@ void fb_write_cell(unsigned int row, unsigned int col,
    unsigned int position = row * FB_COL_LIMIT + col;
    fb[position * 2] = c;
    fb[position * 2 + 1] = ((bg & 0x0F) << 4) | (fg & 0x0F);
+}
+
+void fb_enable_cursor() {
+   // The difference between end and start represents the thickness of the cursor.
+   // See pcjs.org/blog/2018/03/20/.
+#define CURSOR_SCANLINE_START 10
+#define CURSOR_SCANLINE_END 15
+   outb(FB_COMMAND_PORT, FB_CURSOR_START_HIGH_COMMAND);
+   // Note that we & with 0xC0 to not disable the cursor:
+   // http://osdever.net/FreeVGA/vga/crtcreg.htm#0A
+   outb(FB_DATA_PORT, (inb(FB_DATA_PORT) & 0xC0) | CURSOR_SCANLINE_START);
+   outb(FB_COMMAND_PORT, FB_CURSOR_START_LOW_COMMAND);
+   // We keep cursor skew settings.
+   outb(FB_DATA_PORT, (inb(FB_DATA_PORT) & 0xE0) | CURSOR_SCANLINE_END);
+}
+
+void fb_move_cursor(unsigned short row, unsigned short col) {
+   if (row >= FB_ROW_LIMIT || col >= FB_COL_LIMIT) {
+      return;
+   }
+   unsigned short pos = row * FB_COL_LIMIT + col;
+   outb(FB_COMMAND_PORT, FB_CURSOR_LOCATION_HIGH_COMMAND);
+   outb(FB_DATA_PORT, (pos >> 8) & 0x00FF);
+   outb(FB_COMMAND_PORT, FB_CURSOR_LOCATION_LOW_COMMAND);
+   outb(FB_DATA_PORT, pos & 0x00FF);
 }

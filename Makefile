@@ -1,4 +1,4 @@
-OBJECTS = fb.o loader.o kmain.o
+OBJECTS = fb.o loader.o kmain.o io.o
 CC = gcc
 CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
@@ -31,7 +31,7 @@ qemu: os.iso
 	qemu-system-i386 -s -boot d -cdrom os.iso
 
 
-%.o: %.c
+%.o: %.c %.h
 	$(CC) $(CFLAGS) $< -o $@
 
 %.o: %.s

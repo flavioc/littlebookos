@@ -2,6 +2,7 @@
 
 void kmain()
 {
+	fb_enable_cursor();
 	fb_clear();
 	FbContext ctx;
 	fb_init_context(&ctx);
