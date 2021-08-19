@@ -1,4 +1,4 @@
-OBJECTS = fb.o loader.o kmain.o io.o
+OBJECTS = fb.o loader.o kmain.o io.o serial.o
 CC = gcc
 CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
@@ -28,7 +28,7 @@ bochs: os.iso
 	bochs -f bochsrc.txt -q
 
 qemu: os.iso
-	qemu-system-i386 -s -boot d -cdrom os.iso
+	qemu-system-i386 -s -boot d -cdrom os.iso -serial stdio
 
 
 %.o: %.c %.h
