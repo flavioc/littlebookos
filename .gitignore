@@ -1,0 +1,4 @@
+os.iso
+*.o
+*.log
+*.elf
