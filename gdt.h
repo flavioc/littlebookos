@@ -5,8 +5,26 @@ struct gdt_entry_struct {
 	unsigned short limit_low;
 	unsigned short base_low;
 	unsigned char base_middle;
-	unsigned char access;
-	unsigned char granularity;
+
+   // Data or code.
+   unsigned char segment_type : 4;
+   // 1 for yes. 0 for the null segment.
+   unsigned char is_segment_present : 1;
+   // 0 for Ring 0, 3 for Ring 3.
+   unsigned char descriptor_privilege_level : 2;
+   unsigned char descriptor_type : 1;
+
+   unsigned char limit_high : 4;
+   unsigned char available_for_system_use : 1;
+   unsigned char always_zero : 1;
+   // Operand size:
+   // 0 - 16 bit
+   // 1 - 32 bit
+   unsigned char operand_size : 1;
+   // Granularity:
+   // 0 -> 1 byte
+   // 1 -> 1 kbyte
+   unsigned char granularity : 1;
 	unsigned char base_high;
 } __attribute ((packed));
 typedef struct gdt_entry_struct gdt_entry_t;
