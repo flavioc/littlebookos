@@ -4,7 +4,7 @@
 static char* fb = (char*) 0x000B8000;
 
 #define FB_COL_LIMIT 80
-#define FB_ROW_LIMIT 80
+#define FB_ROW_LIMIT 25
 
 void fb_init_context(FbContext* context) {
    context->row = 0;
