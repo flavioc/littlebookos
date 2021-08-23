@@ -44,8 +44,7 @@ void fb_clear() {
    }
 }
 
-void fb_write_cell(unsigned int row, unsigned int col,
-      char c, unsigned char fg, unsigned char bg) {
+void fb_write_cell(u8int row, u8int col, char c, u8int fg, u8int bg) {
    unsigned int position = row * FB_COL_LIMIT + col;
    fb[position * 2] = c;
    fb[position * 2 + 1] = ((bg & 0x0F) << 4) | (fg & 0x0F);
@@ -65,7 +64,7 @@ void fb_enable_cursor() {
    outb(FB_DATA_PORT, (inb(FB_DATA_PORT) & 0xE0) | CURSOR_SCANLINE_END);
 }
 
-void fb_move_cursor(unsigned short row, unsigned short col) {
+void fb_move_cursor(u8int row, u8int col) {
    if (row >= FB_ROW_LIMIT || col >= FB_COL_LIMIT) {
       return;
    }

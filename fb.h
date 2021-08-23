@@ -1,6 +1,8 @@
 #ifndef FB_H
 #define FB_H
 
+#include "types.h"
+
 // Framebuffer colors.
 #define FB_BLACK 0
 #define FB_BLUE 1
@@ -29,10 +31,9 @@ void fb_write_text(const char* str, FbContext* fb_context);
 
 void fb_clear();
 
-void fb_write_cell(unsigned int row, unsigned int col,
-		char c, unsigned char fg, unsigned char bg);
+void fb_write_cell(u8int row, u8int col, char c, u8int fg, u8int bg);
 
 void fb_enable_cursor();
-void fb_move_cursor(unsigned short row, unsigned short col);
+void fb_move_cursor(u8int row, u8int col);
 
 #endif

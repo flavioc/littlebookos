@@ -1,10 +1,12 @@
 #ifndef GDT_H
 #define GDT_H
 
+#include "types.h"
+
 struct gdt_entry_struct {
-	unsigned short limit_low;
-	unsigned short base_low;
-	unsigned char base_middle;
+   u16int limit_low;
+   u16int base_low;
+   u8int base_middle;
 
    // Data or code.
    unsigned char segment_type : 4;
@@ -25,16 +27,16 @@ struct gdt_entry_struct {
    // 0 -> 1 byte
    // 1 -> 1 kbyte
    unsigned char granularity : 1;
-	unsigned char base_high;
+   u8int base_high;
 } __attribute ((packed));
 typedef struct gdt_entry_struct gdt_entry_t;
 
 struct gdt_ptr_struct {
 	// The upper 16 bits of all selector limits.
 	// Should be size of table - 1.
-	unsigned short limit;
+	u16int limit;
 	// Address of the first gdt_entry_struct.
-	unsigned int base;
+	u32int base;
 } __attribute__ ((packed));
 typedef struct gdt_ptr_struct gdt_ptr_t;
 

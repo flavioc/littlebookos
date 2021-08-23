@@ -4,7 +4,7 @@
 gdt_entry_t gdt_entries[5];
 gdt_ptr_t gdt_ptr;
 
-extern void gdt_flush(unsigned int gdt);
+extern void gdt_flush(u32int gdt);
 
 static void gdt_set_null_gate() {
    gdt_entries[0].base_low = 0;
@@ -25,9 +25,8 @@ static void gdt_set_null_gate() {
    gdt_entries[0].segment_type = 0;
 }
 
-static void gdt_set_gate(unsigned int num, unsigned int base, unsigned int limit,
-      unsigned char privilege_level,
-      unsigned char segment_type) {
+static void gdt_set_gate(u8int num, u32int base, u32int limit,
+      u8int privilege_level, u8int segment_type) {
    gdt_entries[num].base_low = (base & 0xFFFF);
    gdt_entries[num].base_middle = (base >> 16) & 0xFF;
    gdt_entries[num].base_high = (base >> 24) & 0xFF;

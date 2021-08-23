@@ -43,7 +43,7 @@ void isr_handler(registers_t regs) {
    serial_write(SERIAL_COM1_BASE, '0' + regs.int_no);
 }
 
-static void idt_set_gate(unsigned char num, unsigned int base, unsigned short segment_selector, unsigned char privilege_level)
+static void idt_set_gate(u8int num, u32int base, u16int segment_selector, u8int privilege_level)
 {
    idt_entries[num].base_lo = base & 0xFFFF;
    idt_entries[num].base_hi = (base >> 16) & 0xFFFF;

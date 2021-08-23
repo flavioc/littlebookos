@@ -2,7 +2,7 @@
 #include "serial.h"
 
 void
-serial_configure_baud_rate(unsigned short com, unsigned short divisor) {
+serial_configure_baud_rate(u16int com, u16int divisor) {
 #define SERIAL_LINE_ENABLE_DLAB 0x80
    outb(SERIAL_LINE_COMMAND_PORT(com), SERIAL_LINE_ENABLE_DLAB);
    outb(SERIAL_DATA_PORT(com), (divisor >> 8) & 0x00FF);
@@ -19,18 +19,18 @@ void serial_configure_line(unsigned short com) {
    outb(SERIAL_MODEM_COMMAND_PORT(com), 0x03);
 }
 
-int serial_is_transmit_fifo_empty(unsigned int com) {
+int serial_is_transmit_fifo_empty(u16int com) {
    return inb(SERIAL_LINE_STATUS_PORT(com)) & 0x20;
 }
 
-void serial_write(unsigned short com, char a) {
+void serial_write(u16int com, char a) {
    while (serial_is_transmit_fifo_empty(com) == 0) {
    }
 
    outb(SERIAL_DATA_PORT(com), a);
 }
 
-void serial_print(unsigned short com, const char* str) {
+void serial_print(u16int com, const char* str) {
    for (int i = 0; *(str + i); ++i) {
       serial_write(com, *(str + i));
    }
