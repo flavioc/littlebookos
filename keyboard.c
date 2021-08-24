@@ -4,13 +4,14 @@
 #include "serial.h"
 
 #define KEYBOARD_DATA_PORT 0x60
+#define ESC_SCAN_CODE 0x01
 #define TAB_SCAN_CODE 0x3A
 #define ENTER_SCAN_CODE 0x1C
 
 static int caps_lock = 0;
 
 char kbdus[128] = {
-    0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
+    0,  0, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
     '9', '0', '-', '=', '\b',   /* Backspace */
     '\t',           /* Tab */
     'q', 'w', 'e', 'r', /* 19 */
@@ -66,20 +67,17 @@ void keyboard_handler(registers_t registers) {
             case ENTER_SCAN_CODE:
                fb_write_char('\n');
                break;
+            case ESC_SCAN_CODE:
+               break;
             default: {
                char key = kbdus[scancode];
-               int valid_key = 0;
-               if (key >= '0' && key <= '9') {
-                  valid_key = 1;
-               } else if (key == ' ') {
-                  valid_key = 1;
-               } else if (key >= 'a' && key <= 'z') {
-                  valid_key = 1;
-                  if (caps_lock) {
-                     key = 'A' + (key - 'a');
-                  }
+               if (key == '\t') {
+                  fb_write_text("  ");
+                  key = 0;
+               } if (key >= 'a' && key <= 'z' && caps_lock) {
+                  key = 'A' + (key - 'a');
                }
-               if (valid_key) {
+               if (key != 0) {
                   fb_write_char(key);
                }
                break;
