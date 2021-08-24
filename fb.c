@@ -6,34 +6,45 @@ static char* fb = (char*) 0x000B8000;
 #define FB_COL_LIMIT 80
 #define FB_ROW_LIMIT 25
 
+typedef struct _FbContext {
+   unsigned char row, col;
+} FbContext;
+
+static FbContext context = {0};
+
 void fb_init_context(FbContext* context) {
    context->row = 0;
    context->col = 0;
 }
 
-void fb_write_char(const char c, FbContext* context) {
-   if (context->row >= FB_ROW_LIMIT) {
+static void fb_do_write_char(const char c) {
+   if (context.row >= FB_ROW_LIMIT) {
       return;
    }
    if (c == '\n') {
-      context->row = context->row + 1;
-      context->col = 0;
+      context.row = context.row + 1;
+      context.col = 0;
       return;
    }
-   fb_write_cell(context->row, context->col, c, FB_WHITE, FB_BLACK);
-   if (context->col == FB_COL_LIMIT) {
-      context->col = 0;
-      context->row = context->row + 1;
+   fb_write_cell(context.row, context.col, c, FB_WHITE, FB_BLACK);
+   if (context.col == FB_COL_LIMIT) {
+      context.col = 0;
+      context.row = context.row + 1;
    } else {
-      context->col = context->col + 1;
+      context.col = context.col + 1;
    }
 }
 
-void fb_write_text(const char* str, FbContext* context) {
+void fb_write_text(const char* str) {
    for (int i = 0; *(str + i); ++i) {
-      fb_write_char(*(str + i), context);
+      fb_write_char(*(str + i));
    }
-   fb_move_cursor(context->row, context->col);
+   fb_move_cursor(context.row, context.col);
+}
+
+void fb_write_char(char c) {
+   fb_do_write_char(c);
+   fb_move_cursor(context.row, context.col);
 }
 
 void fb_clear() {

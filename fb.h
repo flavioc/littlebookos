@@ -22,12 +22,8 @@
 #define FB_CURSOR_LOCATION_HIGH_COMMAND 0xE
 #define FB_CURSOR_LOCATION_LOW_COMMAND 0xF
 
-typedef struct _FbContext {
-   unsigned char row, col;
-} FbContext;
-
-void fb_init_context(FbContext* fb_context);
-void fb_write_text(const char* str, FbContext* fb_context);
+void fb_write_text(const char* str);
+void fb_write_char(char c);
 
 void fb_clear();
 

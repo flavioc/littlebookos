@@ -1,6 +1,7 @@
 #include "fb.h"
 #include "gdt.h"
 #include "idt.h"
+#include "keyboard.h"
 #include "serial.h"
 
 void kmain()
@@ -14,10 +15,10 @@ void kmain()
 
    fb_enable_cursor();
    fb_clear();
-   FbContext ctx;
-   fb_init_context(&ctx);
-   fb_write_text("Hello from the little book about OS development\nThis is the framebuffer", &ctx);
+   fb_write_text("Hello from the little book about OS development\nThis is the framebuffer\n> ");
 
    __asm__ volatile ("int $0x01");
    __asm__ volatile ("int $0x00");
+   __asm__ volatile ("sti");
+   register_interrupt_handler(KEYBOARD_INTERRUPT, keyboard_handler);
 }
