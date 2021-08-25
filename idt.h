@@ -33,6 +33,8 @@ typedef struct registers {
 
 void idt_init();
 
+#define IRQ_INTERRUPT_BASE 32
+
 typedef void (*isr_t)(registers_t);
 void register_interrupt_handler(u8int n, isr_t handler);
 

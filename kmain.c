@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "keyboard.h"
 #include "serial.h"
+#include "timer.h"
 
 void kmain()
 {
@@ -21,4 +22,7 @@ void kmain()
    __asm__ volatile ("int $0x00");
    __asm__ volatile ("sti");
    register_interrupt_handler(KEYBOARD_INTERRUPT, keyboard_handler);
+
+   // Initialize timer to 50Hz, which is 50 cycles per second (20ms).
+   timer_init(50);
 }
