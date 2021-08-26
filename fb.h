@@ -24,6 +24,7 @@
 
 void fb_write_text(const char* str);
 void fb_write_char(char c);
+void fb_backspace(u8int overwrite);
 
 void fb_clear();
 

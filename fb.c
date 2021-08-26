@@ -22,6 +22,10 @@ static void fb_do_write_char(const char c) {
       return;
    }
    if (c == '\n') {
+      if (context.row == FB_ROW_LIMIT - 1) {
+         // Do not do anything, we are over the limit.
+         return;
+      }
       context.row = context.row + 1;
       context.col = 0;
       return;
@@ -44,6 +48,21 @@ void fb_write_text(const char* str) {
 
 void fb_write_char(char c) {
    fb_do_write_char(c);
+   fb_move_cursor(context.row, context.col);
+}
+
+void fb_backspace(u8int overwrite) {
+   if (context.col == 0 || context.row == FB_ROW_LIMIT) {
+      if (context.row > 0) {
+         context.row = context.row - 1;
+         context.col = FB_COL_LIMIT - 1;
+      }
+   } else {
+      context.col = context.col - 1;
+   }
+   if (overwrite) {
+      fb_write_cell(context.row, context.col, ' ', FB_WHITE, FB_BLACK);
+   }
    fb_move_cursor(context.row, context.col);
 }
 

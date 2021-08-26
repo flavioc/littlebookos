@@ -7,6 +7,8 @@
 #define ESC_SCAN_CODE 0x01
 #define TAB_SCAN_CODE 0x3A
 #define ENTER_SCAN_CODE 0x1C
+#define BACKSPACE_SCAN_CODE 0x0E
+#define ARROW_LEFT_SCAN_CODE 0x4B
 
 static int caps_lock = 0;
 
@@ -68,6 +70,12 @@ void keyboard_handler(registers_t registers) {
                fb_write_char('\n');
                break;
             case ESC_SCAN_CODE:
+               break;
+            case ARROW_LEFT_SCAN_CODE:
+               fb_backspace(/*overwrite=*/0);
+               break;
+            case BACKSPACE_SCAN_CODE:
+               fb_backspace(/*overwrite=*/1);
                break;
             default: {
                char key = kbdus[scancode];
