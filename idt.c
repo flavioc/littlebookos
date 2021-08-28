@@ -58,9 +58,14 @@ extern void irq14();
 extern void irq15();
 
 void isr_handler(registers_t regs) {
-   serial_print(SERIAL_COM1_BASE, "Got interrupt ");
-   serial_write(SERIAL_COM1_BASE, '0' + regs.int_no);
-   serial_write(SERIAL_COM1_BASE, '\n');
+   if (interrupt_handlers[regs.int_no] != 0) {
+      isr_t handler = interrupt_handlers[regs.int_no];
+      handler(regs);
+   } else {
+      serial_print(SERIAL_COM1_BASE, "Got unhandled interrupt ");
+      serial_write(SERIAL_COM1_BASE, '0' + regs.int_no);
+      serial_write(SERIAL_COM1_BASE, '\n');
+   }
 }
 
 static void idt_set_gate(u8int num, u32int base, u16int segment_selector, u8int privilege_level)
