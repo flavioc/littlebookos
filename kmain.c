@@ -5,8 +5,11 @@
 #include "serial.h"
 #include "timer.h"
 
-void kmain()
+struct multiboot;
+
+void kmain(struct multiboot *mboot_ptr)
 {
+   (void)mboot_ptr;
    gdt_init();
    idt_init();
 

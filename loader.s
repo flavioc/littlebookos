@@ -1,25 +1,31 @@
-global loader
-extern kmain
+MBOOT_PAGE_ALIGN equ 1<<0
+MBOOT_MEM_INFO equ 1<<1
+MBOOT_HEADER_MAGIC equ 0x1BADB002
+MBOOT_HEADER_FLAGS equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
+MBOOT_CHECKSUM equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
-MAGIC_NUMBER equ 0x1BADB002
-FLAGS equ 0x0
-CHECKSUM equ -MAGIC_NUMBER
-KERNEL_STACK_SIZE equ 4096
+[BITS 32]
+[GLOBAL mboot]
+[EXTERN code]
+[EXTERN bss]
+[EXTERN end]
 
-section .text
-align 4
-	dd MAGIC_NUMBER
-	dd FLAGS
-	dd CHECKSUM
+mboot:
+dd MBOOT_HEADER_MAGIC
+dd MBOOT_HEADER_FLAGS
+dd MBOOT_CHECKSUM
 
-loader:
-	mov eax, 0xCAFEBABE
-	mov esp, kernel_stack + KERNEL_STACK_SIZE
+dd mboot
+dd code
+dd bss
+dd end
+dd start
+
+[GLOBAL start]
+[EXTERN kmain]
+
+start:
+	push ebx
+	cli
 	call kmain
-.loop:
-	jmp .loop
-
-section .bss
-align 4
-kernel_stack:
-	resb KERNEL_STACK_SIZE
+	jmp $
