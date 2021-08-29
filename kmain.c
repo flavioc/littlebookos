@@ -2,12 +2,13 @@
 #include "gdt.h"
 #include "idt.h"
 #include "keyboard.h"
+#include "paging.h"
 #include "serial.h"
 #include "timer.h"
 
 struct multiboot;
 
-void kmain(struct multiboot *mboot_ptr)
+int kmain(struct multiboot *mboot_ptr)
 {
    (void)mboot_ptr;
    gdt_init();
@@ -16,6 +17,7 @@ void kmain(struct multiboot *mboot_ptr)
    serial_configure_baud_rate(SERIAL_COM1_BASE, 1);
    serial_configure_line(SERIAL_COM1_BASE);
    serial_print(SERIAL_COM1_BASE, "Hello from the little book about OS development\nThis is the serial port\n");
+   paging_init();
 
    fb_enable_cursor();
    fb_clear();
@@ -28,4 +30,12 @@ void kmain(struct multiboot *mboot_ptr)
 
    // Initialize timer to 50Hz, which is 50 cycles per second (20ms).
    timer_init(50);
+
+#if 0
+   u32int *ptr = (u32int*)0xA0000000;
+   (void)ptr;
+   serial_write(SERIAL_COM1_BASE, *ptr);
+#endif
+
+   return 0;
 }

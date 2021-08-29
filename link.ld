@@ -1,8 +1,6 @@
 ENTRY(start)
 
 SECTIONS {
-	. = 0x00100000;
-
 	.text 0x100000 :
 	{
 		code = .; _code = .; __code = .;
@@ -22,6 +20,7 @@ SECTIONS {
 	{
 		bss = .; _bss = .; __bss = .;
 		*(.bss)
+		*(COMMON)
 		. = ALIGN(4096);
 	}
 

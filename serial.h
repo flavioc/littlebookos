@@ -19,6 +19,8 @@
 void serial_configure_baud_rate(u16int com, u16int divisor);
 void serial_configure_line(u16int com);
 void serial_write(u16int com, char a);
+void serial_write_int(u16int com, int a);
+void serial_write_hexa(u16int com, int a);
 void serial_print(u16int com, const char* str);
 
 #endif

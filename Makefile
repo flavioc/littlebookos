@@ -1,7 +1,7 @@
 OBJECTS = fb.o loader.o kmain.o io.o serial.o gdt.o gdt_flush.o idt.o \
-			 interrupt.o keyboard.o timer.o
+			 interrupt.o keyboard.o timer.o kmalloc.o paging.o utils.o
 CC = gcc
-CFLAGS = -std=c11 -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
+CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
 LDFLAGS = -T link.ld -melf_i386
 AS = nasm
@@ -9,7 +9,7 @@ ASFLAGS = -f elf
 
 all: kernel.elf
 
-kernel.elf: $(OBJECTS)
+kernel.elf: $(OBJECTS) link.ld
 	ld $(LDFLAGS) $(OBJECTS) -o kernel.elf
 
 os.iso: kernel.elf

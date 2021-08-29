@@ -30,6 +30,38 @@ void serial_write(u16int com, char a) {
    outb(SERIAL_DATA_PORT(com), a);
 }
 
+void serial_write_int(u16int com, int a) {
+   int largest = 1;
+   while (largest < a) {
+      largest *= 10;
+   }
+   while (largest > 1) {
+      largest /= 10;
+      serial_write(com, '0' + (int)a/largest);
+      a %= largest;
+   }
+   serial_print(com, "\n");
+}
+
+void serial_write_hexa(u16int com, int a) {
+   serial_print(com, "0x");
+   int largest = 1;
+   while (largest < a) {
+      largest *= 16;
+   }
+   while (largest > 1) {
+      largest /= 16;
+      int n = a / largest;
+      if (n >= 10) {
+         serial_write(com, 'A' + (n - 10));
+      } else {
+         serial_write(com, '0' + n);
+      }
+      a %= largest;
+   }
+   serial_print(com, "\n");
+}
+
 void serial_print(u16int com, const char* str) {
    for (int i = 0; *(str + i); ++i) {
       serial_write(com, *(str + i));
